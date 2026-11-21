@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% block title %}Design a NameSprout{% endblock %}
+{% block content %}
+<main class="builder-page">
+  <section class="builder-intro">
+    <p class="eyebrow">Make something that grows with them</p>
+    <h1>Build your NameSprouts proof</h1>
+    <p>Add a birth-month flower for each name, arrange the page, and approve your proof. Creating a proof is free.</p>
+  </section>
+
+  <div class="builder-grid">
+    <section class="editor-panel" aria-labelledby="flower-heading">
+      <div class="step-heading"><span>1</span><div><h2 id="flower-heading">Add flowers</h2><p>Use a name and its birth-month flower.</p></div></div>
+      <form id="flower-form" class="sprout-form">
+        <label for="sprout-name">Name</label>
+        <input id="sprout-name" name="name" type="text" maxlength="18" placeholder="e.g. Oliver" autocomplete="off" required>
+        <label for="sprout-month">Birth month</label>
+        <select id="sprout-month" name="month" required>
+          <option value="">Choose a month</option>
+          {% for month in months %}
+            <option value="{{ month }}">{{ month|capitalize }}</option>
+          {% endfor %}
+        </select>
+        <button class="button button-secondary" id="add-sprout" type="submit">Add flower</button>
+      </form>
+      <div class="sprout-list-wrap">
+        <div class="list-heading"><h3>Your flowers</h3><span id="sprout-count">0 / {{ max_sprouts }}</span></div>
+        <ul id="sprout-list" class="sprout-list"></ul>
+        <p class="helper-copy" id="empty-list">Add at least one flower to start your proof.</p>
+      </div>
+      <div class="step-heading section-break"><span>2</span><div><h2>Set the page</h2><p>Choose a layout and printable size.</p></div></div>
+      <label for="layout-select">Arrangement</label>
+      <select id="layout-select">
+        <option value="row">One row</option>
+        <option value="staggered">Staggered row</option>
+        <option value="two-rows">Two rows</option>
+      </select>
+      <label for="paper-select">Print size</label>
+      <select id="paper-select">
+        <option value="letter-landscape">US Letter · landscape</option>
+        <option value="letter-portrait">US Letter · portrait</option>
+        <option value="square">Square · 10 × 10 in</option>
+      </select>
+      <label for="design-title">Design name <span class="optional-label">optional</span></label>
+      <input type="text" id="design-title" maxlength="80" placeholder="Family garden">
+      <div class="save-proof-box">
+        <p>Proofs are free. Save this design to your account, approve the proof, then pay once to unlock the print-ready PDF.</p>
+        <form id="save-form" method="POST" action="{{ url_for('save_design') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="sprouts_json" id="sprouts-json">
+          <input type="hidden" name="layout" id="saved-layout">
+          <input type="hidden" name="paper_size" id="saved-paper-size">
+          <input type="hidden" name="title" id="saved-title">
+          <input type="hidden" name="design_id" id="saved-design-id">
+          <button type="submit" class="button button-primary" id="save-proof" disabled>Save free proof</button>
+        </form>
+        <small>One-time download price: &dollar;{{ "%.2f"|format(design_price) }} USD</small>
+      </div>
+    </section>
+
+    <section class="proof-panel" aria-labelledby="preview-heading">
+      <div class="proof-panel-heading">
+        <div><p class="eyebrow">Live preview</p><h2 id="preview-heading">Your proof</h2></div>
+        <span class="proof-badge">FREE PROOF</span>
+      </div>
+      <div class="paper-frame">
+        <svg id="proof-canvas" role="img" aria-label="Preview of your NameSprouts printable" viewBox="0 0 1100 850"></svg>
+      </div>
+      <p class="preview-note">The preview shows your selected flowers and names on textured paper. Approve it when it looks right.</p>
+    </section>
+  </div>
+</main>
+<script>
+window.NameSproutsConfig = {
+  flowersUrl: {{ url_for('flower_image')|tojson }},
+  paperUrl: {{ url_for('static', filename='images/watercolor-paper-bg.png')|tojson }},
+  maxSprouts: {{ max_sprouts }},
+  initialDesign: {{ initial_design|tojson }}
+};
+</script>
+<script src="{{ url_for('static', filename='js/design.js') }}" defer></script>
+{% endblock %}
+

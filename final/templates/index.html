@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block title %}NameSprouts · Names that grow{% endblock %}
+{% block content %}
+<main class="landing-page">
+  <section class="landing-hero">
+    <div class="hero-copy">
+      <p class="eyebrow">A keepsake, grown from a name</p>
+      <h1>Names that grow into something beautiful.</h1>
+      <p>Create a watercolor flower garden where every name becomes part of the stem. Make and approve your proof for free, then pay once for a print-ready PDF.</p>
+      <a class="button button-primary hero-cta" href="{{ url_for('design') }}">Start a free proof <span aria-hidden="true">→</span></a>
+      <small>No payment to design or review your proof.</small>
+    </div>
+    <figure class="hero-art">
+      <img src="{{ url_for('static', filename='images/example.png') }}" alt="Watercolor flowers with names flowing down their stems">
+      <figcaption>A little garden, full of your people.</figcaption>
+    </figure>
+    <div class="hero-bloom bloom-one"></div><div class="hero-bloom bloom-two"></div>
+  </section>
+  <section class="how-it-works">
+    <p class="eyebrow">Three simple steps</p>
+    <h2>From names to a keepsake</h2>
+    <div class="steps-grid">
+      <article><span>01</span><h3>Choose your flowers</h3><p>Add a name and its birth-month flower for each person in your garden.</p></article>
+      <article><span>02</span><h3>Arrange your page</h3><p>Try a row, a staggered garden, or two rows. Choose a printable page size.</p></article>
+      <article><span>03</span><h3>Approve, then print</h3><p>Review a free proof. When it feels right, make a one-time purchase for the print-ready PDF.</p></article>
+    </div>
+  </section>
+</main>
+{% endblock %}
+

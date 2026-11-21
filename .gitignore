@@ -1,0 +1,12 @@
+.env
+.venv/
+.tools/
+.runtime/
+.cache/
+__pycache__/
+*.py[cod]
+final/instance/
+final/.venv/
+final/namesprouts.db
+final/render-*.png
+

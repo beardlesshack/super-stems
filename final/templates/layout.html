@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f4ec">
+  <title>{% block title %}NameSprouts{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="Main navigation">
+      <a class="wordmark" href="{{ url_for('home') }}">Name<span>Sprouts</span><i aria-hidden="true">✿</i></a>
+      <div class="nav-links">
+        <a href="{{ url_for('design') }}">Make a proof</a>
+        {% if session.get('user_id') %}
+          <a href="{{ url_for('projects') }}">My designs</a>
+          <span class="nav-greeting">Hi, {{ session.get('username') }}</span>
+          <form method="POST" action="{{ url_for('logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="nav-logout" type="submit">Sign out</button></form>
+        {% else %}
+          <a href="{{ url_for('login') }}">Sign in</a>
+          <a class="nav-account" href="{{ url_for('register') }}">Create free account</a>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flashes" aria-live="polite">
+        {% for category, message in messages %}<li class="{{ category }}">{{ message }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+  <footer class="site-footer"><p>&copy; 2026 NameSprouts</p><p>Made with care, from one name to another.</p></footer>
+</body>
+</html>
+

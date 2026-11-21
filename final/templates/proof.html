@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block title %}Proof · {{ design['title'] }}{% endblock %}
+{% block content %}
+<main class="proof-page">
+  <section class="proof-heading">
+    <div>
+      <p class="eyebrow">Your saved design</p>
+      <h1>{{ design['title'] }}</h1>
+      <p>{{ sprouts|length }} flower{% if sprouts|length != 1 %}s{% endif %} · {{ design['paper_size']|replace('-', ' ')|title }}</p>
+    </div>
+    <span class="status-pill status-{{ design['status'] }}">{{ design['status']|replace('_', ' ')|title }}</span>
+  </section>
+  <section class="proof-review">
+    <div class="paper-frame paper-frame-saved">
+      <img class="saved-proof-image" src="{{ url_for('proof_svg', design_id=design['id']) }}" alt="Print proof for {{ design['title'] }}">
+    </div>
+    <aside class="proof-actions">
+      <h2>Review your proof</h2>
+      <p>Check each name, flower, and page layout. You can edit the design before approving it.</p>
+      <a class="button button-secondary full-button" href="{{ url_for('design', design_id=design['id']) }}">Edit design</a>
+      {% if design['status'] == 'paid' %}
+        <a class="button button-primary full-button" href="{{ url_for('download_pdf', design_id=design['id']) }}">Download print-ready PDF</a>
+      {% elif design['status'] == 'approved' %}
+        <div class="purchase-box">
+          <strong>One-time download</strong>
+          <p>&dollar;{{ '%.2f'|format(price) }} USD · print-ready PDF</p>
+          <form method="POST" action="{{ url_for('checkout', design_id=design['id']) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="button button-primary full-button" type="submit">Pay once and download</button>
+          </form>
+          {% if not stripe_ready %}<small>Checkout is ready to connect. Stripe keys are needed to accept payments.</small>{% endif %}
+        </div>
+      {% else %}
+        <form method="POST" action="{{ url_for('approve_proof', design_id=design['id']) }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="button button-primary full-button" type="submit">Approve this proof</button>
+        </form>
+        <small>Proof approval is free. Payment is only required for the print-ready download.</small>
+      {% endif %}
+    </aside>
+  </section>
+</main>
+<script>
+if (new URLSearchParams(window.location.search).has("session_id")) {
+  window.history.replaceState({}, "", window.location.pathname);
+}
+localStorage.removeItem("namesprouts-composer");
+</script>
+{% endblock %}
+

@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block title %}My Designs · NameSprouts{% endblock %}
+{% block content %}
+<main class="account-page">
+  <section class="page-heading">
+    <div><p class="eyebrow">Your account</p><h1>My designs</h1><p>Return to a proof, make changes, or download a paid printable.</p></div>
+    <a class="button button-primary" href="{{ url_for('design') }}">Create a design</a>
+  </section>
+  {% if designs %}
+    <section class="design-library">
+      {% for design in designs %}
+        <article class="library-card">
+          <a class="library-preview" href="{{ url_for('proof', design_id=design['id']) }}">
+            <img src="{{ url_for('proof_svg', design_id=design['id']) }}" alt="Proof for {{ design['title'] }}">
+          </a>
+          <div class="library-card-body">
+            <div class="library-card-title"><h2>{{ design['title'] }}</h2><span class="status-pill status-{{ design['status'] }}">{{ design['status']|replace('_', ' ')|title }}</span></div>
+            <p>{{ design['updated_at'][:10] }} · {{ design['paper_size']|replace('-', ' ')|title }}</p>
+            <div class="library-actions">
+              <a class="button button-secondary" href="{{ url_for('proof', design_id=design['id']) }}">Open proof</a>
+              {% if design['status'] == 'paid' %}
+                <a class="text-link" href="{{ url_for('download_pdf', design_id=design['id']) }}">Download PDF</a>
+              {% endif %}
+              <form method="POST" action="{{ url_for('delete_design', design_id=design['id']) }}" onsubmit="return confirm('Delete this design?')">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="text-button" type="submit">Delete</button>
+              </form>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    </section>
+  {% else %}
+    <section class="empty-state"><span class="empty-flower">✿</span><h2>Your garden is ready</h2><p>Start with one name and a birth-month flower. Your free proof will be saved here.</p><a class="button button-primary" href="{{ url_for('design') }}">Make your first proof</a></section>
+  {% endif %}
+</main>
+{% endblock %}
+
