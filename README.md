@@ -1,26 +1,19 @@
-# super-stems
+# Super Stems
 
 Build the feature set for the NameSprouts app.
 
-A main feature of this app is the handwritten look of letters up the stem that spell a person's name. This repository is the design-review workspace for the code structure that lets lettering follow stems and feel hand drawn.
+A main feature of this app is the handwritten look of letters up the stem that spell a person's name. This repository is the design-review workspace for code that lets lettering follow stems and feel hand drawn.
 
-## Current stack
+## Focused preview
 
-The prototype uses Flask 3 and Jinja templates, a browser-side JavaScript SVG proof preview, SQLite for local accounts and saved proofs, Stripe Checkout for one-time payment, and ReportLab/SVGLib for paid PDF output. The browser proof and print renderer are still separate.
+The [single-name preview](design-review/) shows a June rose with **Dennis** following a gently curved stem. It measures the name in the bundled Allura script font and lets the stem grow to fit the lettering.
 
-## Design review
+From the repository root, run:
 
-The current renderer rotates script text vertically and places it at a fixed position relative to each flower image. It does not measure the actual shaped name or fit lettering to a flower-specific stem path yet. See [STACK.md](STACK.md) for the current state and next design focus.
+    py -m http.server 5173
 
-## Run locally
+Then open http://127.0.0.1:5173/design-review/.
 
-The Flask app is in [final/](final/). On Windows:
+## Current application stack
 
-    cd final
-    py -m venv .venv
-    .\\.venv\\Scripts\\Activate.ps1
-    py -m pip install -r requirements.txt
-    Copy-Item .env.example .env
-    py -m flask --app app run --debug
-
-Open http://127.0.0.1:5000. Stripe stays disabled until test credentials are configured. See [final/README.md](final/README.md) for configuration details.
+The full NameSprouts prototype uses Flask 3 and Jinja, a browser-side JavaScript SVG proof preview, SQLite for local accounts and saved proofs, Stripe Checkout for one-time payment, and ReportLab/SVGLib for paid PDF output. See [STACK.md](STACK.md) for the current renderer and design-review notes. The application lives in [final/](final/).
